@@ -96,4 +96,36 @@ class CategoryController extends Controller
             return response($category, 200);
         }
     }
+
+    /**
+     * Actualiza parcialmente los datos de una Category
+     * @return Illuminate\Http\Response
+     */
+    public function patch($id, Request $request)
+    {
+        $rules = [
+            'title' => 'max:60|unique:categories,title,' . $id,
+            'position' => 'min:1|integer',
+            'published' => 'boolean'
+        ];
+
+        $this->validate($request, $rules);
+
+        $category = Category::findOrFail($id);
+
+        $data = $request->all();
+        if (isset($data['title'])) {
+            $data['alias'] = Str::slug($data['title']);
+        }
+        $data['updated_by'] = 'system';
+        $category->fill($data);
+            
+        if ($category->isClean()) {
+            return response($category, Response::HTTP_UNPROCESSABLE_ENTITY);
+            // return response('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        $category->save();
+
+        return response($category, 200);
+    }
 }

@@ -20,3 +20,4 @@ $router->get('/', function () use ($router) {
 $router->get('/categories', ['uses' => 'CategoryController@index']);
 $router->post('/categories', ['uses' => 'CategoryController@create']);
 $router->put('/categories/{id}', ['uses' => 'CategoryController@update']);
+$router->patch('/categories/{id}', ['uses' => 'CategoryController@patch']);
