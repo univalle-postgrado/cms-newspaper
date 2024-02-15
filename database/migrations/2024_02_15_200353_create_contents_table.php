@@ -24,12 +24,12 @@ return new class extends Migration
             $table->boolean('featured');
             $table->enum('status', ['WRITING', 'PUBLISHED', 'NOT_PUBLISHED', 'CLOSED']);
             $table->unsignedSmallInteger('edition_date');
-            $table->string('section_title', 60);
-            $table->string('section_alias', 60);
+            $table->string('category_title', 60);
+            $table->string('category_alias', 60);
             $table->timestamps();
             $table->string('created_by', 60);
             $table->string('updated_by', 60)->nullable();
-            $table->unique(['edition_date', 'section_alias', 'alias']);
+            $table->unique(['edition_date', 'category_alias', 'alias']);
         });
     }
 
