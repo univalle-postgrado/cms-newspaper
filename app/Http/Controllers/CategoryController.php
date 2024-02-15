@@ -128,4 +128,17 @@ class CategoryController extends Controller
 
         return response($category, 200);
     }
+
+    /**
+     * Elimina el recurso Category
+     * @return Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $category = Category::findOrFail($id);
+
+        $category->delete();
+
+        return response($category, 200);
+    }
 }
