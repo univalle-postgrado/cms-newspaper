@@ -7,9 +7,11 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use App\Traits\ApiResponser;
 
 class CategoryController extends Controller
 {
+    use ApiResponser;
 
     /**
      * Create a new controller instance.
@@ -27,7 +29,8 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::select('id', 'title', 'alias')->orderBy('position', 'ASC')->get();
-        return response($categories, 200);
+        // return response($categories, 200);
+        return $this->validResponse($categories);
     }
 
     /**
@@ -38,7 +41,8 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
 
-        return response($category, 200);
+        // return response($category, 200);
+        return $this->validResponse($category);
     }
 
 
@@ -61,7 +65,8 @@ class CategoryController extends Controller
 
         $category = Category::create($data);
 
-        return response($category, 201);
+        // return response($category, 201);
+        return $this->successResponse($category, Response::HTTP_CREATED);
     }
 
 
@@ -94,18 +99,21 @@ class CategoryController extends Controller
             $category->created_by = 'system';
             $category->save();
 
-            return response($category, 201);
+            // return response($category, 201);
+            return $this->successResponse($category, Response::HTTP_CREATED);
         } else {
             $data['updated_by'] = 'system';
             $category->fill($data);
             
             if ($category->isClean()) {
-                return response($category, Response::HTTP_UNPROCESSABLE_ENTITY);
+                // return response($category, Response::HTTP_UNPROCESSABLE_ENTITY);
+                return $this->errorResponse('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
                 // return response('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
             }
             $category->save();
 
-            return response($category, 200);
+            // return response($category, 200);
+            return $this->successResponse($category, Response::HTTP_OK);
         }
     }
 
@@ -133,7 +141,8 @@ class CategoryController extends Controller
         $category->fill($data);
             
         if ($category->isClean()) {
-            return response($category, Response::HTTP_UNPROCESSABLE_ENTITY);
+            // return response($category, Response::HTTP_UNPROCESSABLE_ENTITY);
+            return $this->successResponse($category, Response::HTTP_NOT_MODIFIED);
             // return response('At least one value must change', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $category->save();
@@ -151,6 +160,7 @@ class CategoryController extends Controller
 
         $category->delete();
 
-        return response($category, 200);
+        // return response($category, 200);
+        return $this->successResponse($category, Response::HTTP_OK);
     }
 }
