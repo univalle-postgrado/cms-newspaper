@@ -31,6 +31,18 @@ class CategoryController extends Controller
     }
 
     /**
+     * Devuelve un recurso Category
+     * @return Illuminate\Http\Response
+     */
+    public function read($id)
+    {
+        $category = Category::findOrFail($id);
+
+        return response($category, 200);
+    }
+
+
+    /**
      * Guarda los datos de una Category
      * @return Illuminate\Http\Response
      */
